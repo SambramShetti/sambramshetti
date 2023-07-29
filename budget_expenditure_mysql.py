@@ -9,9 +9,11 @@ Technologies Used:
 3. For all 3 functions, user is initially asked whether he/she wants to provide inputs.
 if Yes, user is asked for particular and amount to be entered.
 after providing inputs, user is again asked whether he wants to continue giving inputs. If Yes, programe continues. If No, programe terminates.
-4. Finally all data given by user is stored to AWS S3 bucket.
+4. Finally all data given by user is stored into Mysql database table in bulk and uploaded to AWS S3 bucket.
 Here we are directly appending all data to file that is already present in AWS S3.
 5. Lastly we are downloading file from AWS S3 bucket in our local machine in specified folder.
+
+Note: This script demonstrates how to insert/update/delete records in bulk.
 
 This programme is intended to keep expenditure records like amount spent for which items. 
 This will help user to keep track of payment done for any item during particular month.
@@ -89,35 +91,37 @@ def sum_of_amount():
 def insert_query():
     insert_input = input("Do you want to insert any records in table? Yes or No \n").capitalize()
     if insert_input == "Yes":
-
+        insert_entries = []
         response = True
         while response:
             particulars = input(("Enter Particulars\n")).capitalize()
             amount = float(input("Enter amount\n"))
             date = datetime.now()
+            insert_entries.append((particulars, amount, date))
 
             logger.info("User input Entered are: Particulars: '{}', Amount: '{}' ".format(particulars, amount))
-
-            # get table name from database
-            tab = '''SELECT Table_name from information_schema. tables where table_schema = "Development" '''
-            cur.execute(tab)
-            table = cur.fetchall()[1]['TABLE_NAME']
-
-            # Insert user inputs into table
-            query = ''' INSERT INTO `Expenditure_July` (`Particulars`, `Amount`, `Date`) VALUES (%s, %s, %s) '''
-            values = (particulars, amount, date)
-            cur.execute(query, values)
-            print(f"Data inserted successfully into Table: '{table}' ")
-            logger.info(f"Data inserted successfully into Table: '{table}', Database: '{Config.DATABASE_CONFIG['database']}' ")
-
-            sum_total = sum_of_amount()
-            print(f'Amount spent till now: {sum_total}')
-            logger.info(f'Amount spent till now: {sum_total}')
 
             user_input = input("Do you want to continue giving inputs?? Yes or No \n").capitalize()
             response = True if user_input == 'Yes' else False
             if user_input == 'Yes':
                 logger.info(" ")
+
+        print('Insert_entries: ', insert_entries)
+        # get table name from database
+        tab = '''SELECT Table_name from information_schema. tables where table_schema = "Development" '''
+        cur.execute(tab)
+        table = cur.fetchall()[1]['TABLE_NAME']
+
+        # Insert user inputs into table
+        query = ''' INSERT INTO `Expenditure_July` (`Particulars`, `Amount`, `Date`) VALUES (%s, %s, %s) '''
+        cur.executemany(query, insert_entries)
+        print(f"Data inserted successfully into Table: '{table}' ")
+        logger.info(f"Data inserted successfully into Table: '{table}', Database: '{Config.DATABASE_CONFIG['database']}' ")
+
+        sum_total = sum_of_amount()
+        print(f'Amount spent till now: {sum_total}')
+        logger.info(f'Amount spent till now: {sum_total}')
+
     else:
         print("Thank you for the response!")
         logger.info("User do not want to insert records in 'Expenditure_July' table")
@@ -127,29 +131,32 @@ def insert_query():
 def update_query():
     update_input = input("Do you want to update any records in table? Yes or No \n").capitalize()
     if update_input == "Yes":
+        update_entries = []
 
         response = True
         while response:
             up_sl_no = int(input("Please provide Sl_No for which you want to update values! \n"))
             up_particulars = input(("Enter Particular \n")).capitalize()
             up_amount = float(input("Enter amount \n"))
+            update_entries.append((up_particulars, up_amount, up_sl_no))
 
             logger.info("User inputs Entered to update the records are: Particulars: '{}', Amount: '{}' ".format(up_particulars, up_amount))
-
-            up_query = "update Expenditure_July set Particulars = %s, Amount = %s where Sl_No = %s"
-            up_values = (up_particulars, up_amount, up_sl_no)
-            cur.execute(up_query, up_values)
-            print(f"Updated values for Particular: '{up_particulars}', Amount: '{up_amount}' corresponding to Sl_No: {up_sl_no} in table Expenditure_July")
-            logger.info(f"Updated values for Particular: '{up_particulars}', Amount: '{up_amount}' corresponding to Sl_No: {up_sl_no} in table Expenditure_July")
-
-            sum_total = sum_of_amount()
-            print(f'Total amount spent after updating the record is: {sum_total}')
-            logger.info(f'Total amount spent after updating the record is: {sum_total}')
 
             user_up_input = input("Do you want to make any further changes?? Yes or No \n").capitalize()
             response = True if user_up_input == "Yes" else False
             if user_up_input == 'Yes':
                 logger.info(" ")
+
+        print('update_entries: ', update_entries)
+        up_query = "update Expenditure_July set Particulars = %s, Amount = %s where Sl_No = %s"
+        cur.executemany(up_query, update_entries)
+        print(f"Updated values for Particular: '{up_particulars}', Amount: '{up_amount}' corresponding to Sl_No: {up_sl_no} in table Expenditure_July")
+        logger.info(f"Updated values for Particular: '{up_particulars}', Amount: '{up_amount}' corresponding to Sl_No: {up_sl_no} in table Expenditure_July")
+
+        sum_total = sum_of_amount()
+        print(f'Total amount spent after updating the record is: {sum_total}')
+        logger.info(f'Total amount spent after updating the record is: {sum_total}')
+
     else:
         print("Thank you for the response!")
         logger.info("User do not want to update records in 'Expenditure_July' table")
@@ -159,6 +166,7 @@ def update_query():
 def delete_values():
     delete_input = input("Do you want to delete any records in table? Yes or No \n").capitalize()
     if delete_input == "Yes":
+        delete_entries = []
 
         select_query = "select Sl_No, Particulars, Amount from Expenditure_July"
         cur.execute(select_query)
@@ -171,22 +179,25 @@ def delete_values():
         response = True
         while response:
             del_particulars = int(input("Enter Sl_No you want to delete from above list\n"))
+            delete_entries.append((del_particulars,))
 
             logger.info(f"User input Entered to delete the record from table Expenditure_July is: Particulars: '{del_particulars}' ")
-
-            del_query = "delete from Expenditure_July where Sl_No = %s"
-            cur.execute(del_query, (del_particulars, ))
-            print("Record deleted successfully from Expenditure_July table")
-            logger.info(f"Sl_No: {del_particulars} deleted successfully from Expenditure_July table")
-
-            sum_total = sum_of_amount()
-            print(f'Total amount spent after deleting the record is: {sum_total}')
-            logger.info(f'Total amount spent after deleting the record is: {sum_total}')
             
             user_udel_input = input("Do you want to delete any more records from table?? Yes or No \n").capitalize()
             response = True if user_udel_input == "Yes" else False
             if user_udel_input == 'Yes':
                 logger.info(" ")
+
+        print('delete_entries: ', delete_entries)
+        del_query = "delete from Expenditure_July where Sl_No = %s"
+        cur.executemany(del_query, delete_entries)
+        print("Record deleted successfully from Expenditure_July table")
+        logger.info(f"Sl_No: {del_particulars} deleted successfully from Expenditure_July table")
+
+        sum_total = sum_of_amount()
+        print(f'Total amount spent after deleting the record is: {sum_total}')
+        logger.info(f'Total amount spent after deleting the record is: {sum_total}')
+
     else:
         print("Thank you for the response!")
         logger.info("User do not want to delete any records from 'Expenditure_July' table")
