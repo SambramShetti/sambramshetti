@@ -230,7 +230,6 @@ def uploading_log_s3(logger):
     # Uploading combined_log_data back to the same file
     client.put_object(Body = combined_data_bytes, Bucket = s3_bucket_name, Key = File)
 
-
 def download_file_s3(logger):
     if insert_input == "No" and  update_input == "No" and delete_input == "No":
         print("Thank you for your response! No file downloded from S3 Bucket to folder")
