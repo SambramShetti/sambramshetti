@@ -14,6 +14,7 @@ Or if user wants to update/delete records, he will be asked to provide 'id' for 
 5. Log file will be created in local machine in specified path but user is asked whether he wants all the details given by him/her to upload to AWS S3 Bucket.
 If user input is 'Yes', log file is uploaded to AWS S3 or else file is not updated.
 
+Here we insert/update/delete records in bulk.
 '''
 
 import myconfig as Config
@@ -33,6 +34,7 @@ filename = Config.S3_ACCESS['mongo_filename']
 # Function to insert record(s) into collection
 def insert_record():
 
+    insert_entries = []
     insert_response = True
 
     while insert_response:
@@ -46,19 +48,22 @@ def insert_record():
             'Date' : date
         }
 
-        collection.insert_one(record)
-        print('Inserted record(s) into collection successfully!')
-        logger.info(f'Inserted Particular : {particular}, Amount : {amount}, Date: {date} into collection successfully!')
+        insert_entries.append(record)
 
         continue_insert_input = input("Do you want to continue giving inputs?? Yes or No \n").capitalize()
         insert_response = True if continue_insert_input == 'Yes' else False
+
+    print('insert_entries: ', insert_entries)
+    collection.insert_many(insert_entries)
+    print('Inserted record(s) into collection successfully!')
+    logger.info(f'Inserted Particular : {particular}, Amount : {amount}, Date: {date} into collection successfully!')
 
     if continue_insert_input == 'No':
         print('Thank you for your response!')
 
 # Function to delete record(s) from collection
 def delete_record():
-
+    delete_entries = []
     delete_response = True
     
     while delete_response:
@@ -69,21 +74,26 @@ def delete_record():
             print(id)
 
         delete_choice = (input('Select an 24 character ObjectId for which you want to delete record \n'))
-        collection.delete_one({'_id' : ObjectId(delete_choice)})
-        print('Deleted record(s) from collection successfully!')
-        logger.info(f'Deleted record for {collection} !')
+
+        delete_entries.append(delete_choice)
 
         continue_delete_input = input("Do you want to delete any other records?? Yes or No \n").capitalize()
         delete_response = True if continue_delete_input == 'Yes' else False
+
+    delete_filter = {'_id': {'$in': [ObjectId(entry) for entry in delete_entries]}}
+    print('delete_filter: ', delete_filter)
+    collection.delete_many(delete_filter)
+    print('Deleted record(s) from collection successfully!')
+    logger.info(f'Deleted record for {collection} !')
 
     if continue_delete_input == 'No':
         print('Thank you for your response!')
 
 # Function to update record in collection
 def update_record():
-
+    update_entries = []
     update_response = True
-        
+
     while update_response:
 
         # Display available records in collection to user
@@ -98,12 +108,17 @@ def update_record():
         prev = {'_id' : ObjectId(update_choice)}
         nextt = {'$set': {'Particular': update_particular, 'Amount':update_amount}}
 
-        collection.update_one(prev, nextt)
-        print(f'Updated record(s) in collection successfully!')
-        logger.info(f'Updated Particular : {update_particular}, Amount : {update_amount} for {prev}')
+        update_entries.append([prev, nextt])
 
         continue_update_input = input("Do you want to update any other records?? Yes or No \n").capitalize()
         update_response = True if continue_update_input == 'Yes' else False
+
+    bulk_updates = [pymongo.UpdateMany(prev, nextt) for prev, nextt in update_entries]
+    print('bulk_update: ', bulk_updates )
+    collection.bulk_write(bulk_updates)
+
+    print(f'Updated record(s) in collection successfully!')
+    logger.info(f'Updated Particular : {update_particular}, Amount : {update_amount} for {prev}')
 
     if continue_update_input == 'No':
         print('Thank you for your response!')
