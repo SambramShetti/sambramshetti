@@ -1,0 +1,50 @@
+<h2>{{user_profile.name}}</h2>
+<h4><strong>Email: {{ user_profile.email }}</strong><span style="margin-right: 500px;"></span><strong>Phone: {{ user_profile.phone }}</strong></h4>
+<hr>
+<br>
+<p><strong>Summary</strong></p>
+<p>{{user_profile.summary}}</p>
+<hr>
+
+<p><strong>Expierence</strong></p>
+<ul>
+  {% for work in previous_work %}
+    <li>{{ work|striptags }}</li>
+  {% endfor %}
+</ul>
+<hr>
+<p><strong>Skills</strong></p>
+<ul>
+  {% for skill in skills %}
+<li>{{ skill|striptags }}</li>
+{% endfor %}
+</ul>
+<hr>
+<p><strong>Education</strong></p>
+<ul>
+  <li>{{ user_profile.school }} School</li>
+  <li>{{ user_profile.degree }} from {{ user_profile.university }} University</li>
+</ul>
+<hr>
+<p><strong>Project Details</strong></p>
+<p>{{user_profile.project}}</p>
+<hr>
+<p><strong>Strength</strong></p>
+<p>{{user_profile.strength}}</p>
+<hr>
+<p><strong class="personal-details">Personal Details</strong></p>
+<div class="personal-details-info">
+  <h5>DOB: {{user_profile.dob}}</h5>
+  <h5>Nationality: {{user_profile.nationalityy}}</h5>
+  <h5>Blood Group: {{user_profile.blood_group}}</h5>
+  <h5>Address: {{user_profile.address}}</h5>
+</div>
+<hr>
+<p><strong>Endrosement</strong></p>
+<h4>I hereby declare that the information furnished above is complete and true to the best of my knowledge</h4>
+  <h4>Date: {{user_profile.date}}</h4>
+  <h4>Place: {{user_profile.place}}</h4>
+  <br>
+  <h4><span style="margin-right: 500px;"></span><strong>{{ user_profile.name }}</strong></h4>
+
+

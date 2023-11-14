@@ -1,0 +1,103 @@
+{% extends "resume/base.html" %}
+{% block title %}Home{% endblock title %}
+{% block homeactive %}active{% endblock homeactive %}
+{% block body %}
+<div class="container">
+    <div class="row m-3">
+        <div class="col-md-6">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="">Name</label>
+                  <input type="name" class="form-control" id="name" name="name" placeholder="John">
+                </div>
+
+                <div class="form-group">
+                  <label for="">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="john@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Phone</label>
+                    <input type="phone" class="form-control" id="phone" name="phone" placeholder="123456789">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">About You</label>
+                    <textarea  type="text" class="form-control" id="summary" name="summary"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Degree</label>
+                    <input type="text" class="form-control" id="degree" name="degree">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">School</label>
+                    <input type="text" class="form-control" id="school" name="school">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">University</label>
+                    <input type="text" class="form-control" id="university" name="university">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Experience</label>
+                    <textarea type="text" class="form-control" id="previous_work" name="previous_work"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Skills</label>
+                    <textarea type="text" class="form-control" id="skills" name="skills"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Strength</label>
+                  <textarea type="text" class="form-control" id="strength" name="strength"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Project</label>
+                  <textarea type="text" class="form-control" id="project" name="project"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Address</label>
+                  <textarea type="text" class="form-control" id="address" name="address"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Nationality</label>
+                  <input type="text" class="form-control" id="nationalityy" name="nationalityy">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Blood Group</label>
+                  <input type="text" class="form-control" id="blood_group" name="blood_group">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Date</label>
+                  <input type="date" class="form-control" id="date" name="date">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Place</label>
+                  <input type="text" class="form-control" id="place" name="place">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">DOB</label>
+                  <input type="text" class="form-control" id="dob" name="dob" placeholder="YYYY-MM-DD">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+        </div>
+    </div>
+</div>    
+  
+{% endblock body %}
+
+
