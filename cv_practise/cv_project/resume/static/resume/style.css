@@ -1,0 +1,9 @@
+.personal-details {
+    font-weight: bold;
+  }
+  
+  /* Optionally, style the details within the personal-details-info class */
+  .personal-details-info h5 {
+    font-weight: normal; /* Resetting the bold font for child elements */
+  }
+  
