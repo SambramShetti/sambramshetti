@@ -1,0 +1,235 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'shop/style.css' %}">
+
+    <title>Ecommerse Website</title>
+  </head>
+  <body>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="#">Ecom</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                      <ul class="navbar-nav">
+                        <li class="nav-item active">
+                          <a class="nav-link" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#">Features</a>
+                        </li>
+                        <li class="nav-item">
+                          {% comment %} <a id="cart" class="nav-link" href="#">Cart(0)</a> {% endcomment %}
+                          <button id="cart" data-html='true' type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+                            sagittis lacus vel augue laoreet rutrum faucibus.">
+                            Cart(0)
+                        </button>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link disabled" href="#">Disabled</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </nav>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <form class="card card-sm">
+                    <div class="card-body row no-gutters align-items-center">
+                        <div class="col">
+                            <input type="search" name="item_name" placeholder="Search for products" class="form-control form-control-borderless">
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-success" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for product in product_objects %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img width="100px" height="200px" src="{{product.image}}" class="card-img-top">
+                    <div class="card-body">
+                        <div id="nm{{product.id}}" class="card-title">{{product.title}}</div>
+                        <div id="price{{product.id}}" class="card-text">{{product.price}}</div>
+
+                        <a href="/{{product.id}}" class="btn btn-warning">View</a>
+                        <button id = "{{product.id}}" class="btn atc btn-warning ">Add to cart</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 offset-md-5">
+                <ul class="pagination">
+
+                    {% if product_objects.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ product_objects.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <a class="page-link" href="?page={{ product_objects.number }}">Current</a>
+                    </li>
+
+                    {% if product_objects.has_next %}
+                    <a class="page-link" href="?page={{ product_objects.next_page_number }}">Next</a>
+                    {% endif %}
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+  </body>
+  <script type="text/javascript">
+    console.log("This is working!");
+    if (localStorage.getItem('cart') == null){
+         var cart = {};
+    }
+    else{
+        cart = JSON.parse(localStorage.getItem('cart'));
+    }
+    {% comment %} above line of if else code says that whenever add to cart button is clicked for any item, that value is stored to cart variable from javascript instead of local storage{% endcomment %}
+
+    $(document).on('click','.atc', function(){
+        console.log("The add to cart is clicked");
+        var item_id = this.id.toString();
+
+        {% comment %} above line of code says that whenever add to cart button is clicked for any item, that items value is added to cart along with its unique item_id{% endcomment %}
+        
+        console.log(item_id)
+        console.log("add to cart button is clicked")
+        
+        if (cart[item_id] != undefined){
+            quantity = cart[item_id][0] + 1;
+            
+            {% comment %} cart[item_id] = cart[item_id] + 1; 
+            This commented code was used before adding above code. above code fetches quantity of particular item_id.
+            cart[item_id] is nothing but quantity itself. cart[item_id][0] is used to store quantity in new variable.
+            {% endcomment %}
+            
+            cart[item_id][0] = quantity;
+            
+            {% comment %}  cart[item_id][0] = quantity means, we are storing it back to quantity variable itsef {% endcomment %} 
+        
+            cart[item_id][2] = cart[item_id][2] + parseFloat(document.getElementById("price" + item_id).innerHTML);
+
+            {% comment %} above code gets price of that particular product/item and convert it into float bcos price is stored in int/float 
+            also above code adds price of previous item with current value/price. for ex say, 1st watch was added for 100rs and again same watch is added, so above code will make price as 100 + 100{% endcomment %}
+        }
+        else{
+            {% comment %} cart[item_id] = 1 {% endcomment %}
+            
+            quantity = 1;
+            price = parseFloat(document.getElementById("price" + item_id).innerHTML);
+            name = document.getElementById("nm"+item_id).innerHTML;
+            cart[item_id] = [quantity, name, price];
+
+            {% comment %} cart[item_id] = [quantity, name, price]; means at index position 1, we have quantity, index position 2 we have name and index position 3 we have price {% endcomment %}
+
+        }
+        
+        {% comment %} above line of if else code says that if that particular item is available in cart and user adds same item to cart again, increase its quantity by 1 else if that item is not available in cart, add that item in cart{% endcomment %}
+
+        console.log(cart);
+        {% comment %} above line of code saves item added to cart in cart variable of javascript{% endcomment %}
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        {% comment %} above line of code saves item added to cart in cart variable of local storage{% endcomment %}
+
+        document.getElementById("cart").innerHTML = "Cart(" + Object.keys(cart).length +")";
+        {% comment %} console.log(Object.keys(cart).length); {% endcomment %}
+        {% comment %} above code will give no of items we have in a cart {% endcomment %}
+        
+    });
+
+    {% comment %} $(function () {
+        $('[data-toggle="popover"]').popover();
+        document.getElementById("cart").setAttribute("data-content","<h6>This is your cart</h6>");
+      }); {% endcomment %}
+      {% comment %} above code will enable pop over code added in navbar {% endcomment %}
+    DisplayCart(cart) 
+    {% comment %} above code is function call for DisplayCart(cart) and below DisplayCart(cart) function is chatgpt code and another DisplayCart(cart) code is udemy code which is giving error {% endcomment %}
+    function DisplayCart(cart) {
+        var cartString = "<h6>This is your cart</h6>";
+        var cartIndex = 1;
+        
+        let cartObject = JSON.parse(localStorage.getItem('cart'))
+
+        for (item in cartObject){
+            console.log(cartObject[item][0])
+            console.log(cartObject[item][1])
+            cartString += cartObject[item][1] + "Qty:" + cartObject[item][0] + "<br>";
+        }
+        {% comment %} above codes are latest code 
+        and below for loop gives cart error when u change page and hit on cart button
+        for (var x in cart) {
+            var element = document.getElementById("nm" + x);
+            if (element) {
+                
+                //cartString += cartIndex + element.innerHTML + "Qty:" + cart[x] + "<br>";
+                
+                cartString += cartIndex + element.innerHTML + "Qty:" + cart[x][0] + "<br>";
+                
+                // cart[x][0] means quantity. we made above changes for quantity i.e  cart[item_id][0] = quantity
+                
+                cartIndex++;
+            }
+        } {% endcomment %}
+        
+        cartString += "<a href='/checkout'><button class='btn btn-warning' id='checkout'>Checkout</button></a>";
+        document.getElementById("cart").setAttribute('data-content', cartString);
+        $('[data-toggle="popover"]').popover();
+    }
+    {% comment %} function DisplayCart(cart){
+        cartString = "<h6>This is your cart</h6>";
+        var cartIndex = 1;
+        {% comment %} after using above var cartString, add data-html='true' in navbar of Cart(0) {% endcomment %}
+        
+        {% comment %}
+        for(var x in cart){
+            cartString += cartIndex;
+            cartString += document.getElementById("nm"+x).innerHTML + "Qty:" + cart[x] + "<br>";
+            cartIndex += 1;
+        }
+        document.getElementById("cart").setAttribute('data-content', cartString);
+        $('[data-toggle="popover"]').popover();
+    } {% endcomment %}
+  </script>
+</html>
+
+
+
+{% comment %} {% for product in product_objects %}
+
+    {{product.title}}
+    <br>
+
+{% endfor %} {% endcomment %}
