@@ -1,0 +1,98 @@
+{% extends "app/base.html" %}
+{% block body %}
+
+<div class="m-10 font-bold">
+    {{chatroom.name}}
+</div>
+
+<!-- {{request.user.username}}  -->
+<!-- above code will fetch user name who has logged in. -->
+<div class="message-container m-10 overflow-auto h-[700px]" id="message-container">
+    <div id="chat-messages">
+        <!-- above code is used to display user message on frontend html page. we make use of id='chat-messages' in JS codes below -->
+        
+            {% for message in messages %}
+            <div class="message shadow-lg p-3 m-3 rounded-lg w-1/2 bg-blue-300">
+                <div class="text-sm text-gray-500">
+                    {{message.user.username}}
+                </div>
+                    {{message.message_content}}
+                <div class="text-sm text-gray-500">
+                    {{message.date}}
+                </div>
+                
+            </div>
+            {% endfor %}
+        </div> 
+</div>
+
+<div class="form-container fixed inset-x-0 bottom-0 bg-blue-900 p-4">
+    <form method="POST">
+        {% csrf_token %}
+        <input class="rounded-md px-2" id="message-input" type="text" name="message" placeholder="Enter message">
+        <button class="text-white ml-5" id="send-button" type="submit">Send</button>
+    </form>
+</div>
+
+
+{{chatroom.slug|json_script:"json-chatroomname"}}
+{{request.user.username|json_script:"json-username"}} 
+<!-- above code will fetch user name who has logged in. -->
+
+<script>
+    const chatRoomName = JSON.parse(document.getElementById('json-chatroomname').textContent);
+    // above code will fetch slug from particular chatroom(chatroom from views.py) from django or html to javascript.
+
+    const username = JSON.parse(document.getElementById('json-username').textContent);
+    // above code will fetch username from particular chatroom(chatroom from views.py) from django or html to javascript.
+
+    const chatSocket = new WebSocket(
+        'ws://' // similar to http://
+        + window.location.host // this line will fetch/give url i.e 127.0.0.1:8000
+        + '/ws/' // we are adding ws/ because in routing.py, we have specified ws/ in path
+        + chatRoomName 
+        + '/' // because we need / at end 
+    )
+    chatSocket.onmessage = function(e){
+        // console.log("This is a message")
+        const data = JSON.parse(e.data)
+        if (data.message){
+            console.log("Received message to client: ", data.message) // This will print message in console.
+            let html = '<div class="message shadow-lg p-3 m-3 rounded-lg w-1/2 bg-blue-300">' + '<div class="text-sm text-gray-500">' + data.username + " </div> " + data.message + '<div class="text-sm text-gray-500">' + 'Now' +  '</div>'// This will print message in frontend html page.
+            document.getElementById("chat-messages").innerHTML += html
+            scroll()
+        }else{
+            alert("The message was empty")
+        }
+    }
+    chatSocket.onclose = function(e){
+        console.log("Socket closed")
+    }
+
+    document.getElementById("send-button").onclick = function(e){
+        e.preventDefault() // this will avoid refreshing of page when send button is clicked after entering message and send message to socket.
+
+        const messageInput = document.getElementById("message-input") // this will get access for message input field
+        const message = messageInput.value // this will get message entered by user
+        console.log(message)
+
+        chatSocket.send(JSON.stringify({ // this will send user input message to socket in consumers.py from front end to backend
+            'message':message,
+            'username':username,
+            'room':chatRoomName, 
+
+        }))
+
+        messageInput.value = "" // this line will set message field to empty once message is sent by user. i.e message field will be empty after message is submitted by user.
+
+
+    }
+
+    function scroll(){
+        const mcontainer = document.getElementById('message-container')
+        mcontainer.scrollTop = mcontainer.scrollHeight
+    }
+    scroll()
+</script>
+
+{% endblock body %}
