@@ -12,3 +12,20 @@ for res in response.objects.all():
     print(res.key)
 
 # ----------------------------------------Listing files in AWS Resource End--------------------------------------------------------------
+
+
+
+# ----------------------------------------Listing files in AWS Client Start--------------------------------------------------------------
+
+import boto3
+
+client = boto3.client('s3')
+
+response = client.list_objects(
+    Bucket='bucket-20feb2024',
+)
+
+for i in response['Contents']:
+    print("response: ", i['Key'])
+
+# ----------------------------------------Listing files in AWS Client End--------------------------------------------------------------
