@@ -61,3 +61,15 @@ response.delete()
 print("Deleted s3 bucket")
 
 # -------------------------------------Response Deleting Non-Empty Bucket End-------------------------------------------------------
+
+
+# -------------------------------------Response Deleting Non-Empty Bucket Start Method 2-------------------------------------------------------
+# Method 2
+import boto3
+
+bucket = boto3.resource('s3').Bucket('unique123-pythons')
+bucket.objects.all().delete()
+response = bucket.delete()
+
+print("response: ", response)
+# -------------------------------------Response Deleting Non-Empty Bucket End Method 2-------------------------------------------------------
