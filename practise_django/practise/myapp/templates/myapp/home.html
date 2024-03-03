@@ -1,0 +1,45 @@
+{% extends "myapp/base.html" %}
+<title>{% block title %}Home{% endblock title %}</title>
+{% block homeactive %}active{% endblock homeactive %}
+
+
+
+{% block body %}
+
+
+<div class="container mt-4">
+    <div class="row">
+        {% for pro in product %}
+        <div class="col-md-4 mb-4">
+
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{{pro.image}}" width="200px" height="200px" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">{{pro.title}}</h5>
+                  <a href="{% url 'details' pro.id %}" class="btn btn-info">Details</a>
+                  <button type="button" class="btn btn-warning ml-5">Add to cart</button>
+                </div>
+              </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock body %}
+
+<!-- <div class="card" style="width: 18rem;">
+    <img class="card-img-top" src="{{pro.image}}" width="150px" height="150px">
+    <div class="card-body">
+        <div id ="{{pro.id}}">{{pro.title}}</div>
+        <div id ="{{pro.id}}">{{pro.price}}</div>
+        <a href="{% url 'details' pro.id %}" class="btn btn-primary">Details</a>
+        <button id = "{{pro.id}}" type="button" class="btn btn-warning ml-5">Warning</button>
+    </div>
+</div> -->
+
+
+
+
+

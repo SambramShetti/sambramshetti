@@ -1,0 +1,77 @@
+{% extends "myapp/base.html" %}
+<title>{% block title %}Details{% endblock title %}</title>
+
+{% block body %}
+
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-6 mt-4">
+            <div class="row">
+                <div class="col">
+                    <img width="450px" height="400px" src="{{product_obj.image}}">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mt-4">
+            <table class="table table-striped">
+                <tbody>
+                  <tr>
+                    <td>Product</td>
+                    <td>{{product_obj.title}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>Price</td>
+                    <td>{{product_obj.price}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>Discount Amount</td>
+                    <td>{{product_obj.discount_price}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>Description</td>
+                    <td>{{product_obj.description}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>Category</td>
+                    <td>{{product_obj.category}}</td>
+                  </tr>
+
+                </tbody>
+              </table>
+            <!-- <div class="row">
+                <h3>{{product_obj.title}}</h3>
+                
+            </div>
+
+            <div class="row">
+                {{product_obj.price}}
+            </div>
+
+            <div class="row">
+                {{product_obj.description}}
+            </div> -->
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+{% endblock body %}
+
+
+
+
+
+
+
+
