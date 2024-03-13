@@ -1,0 +1,34 @@
+{% extends "march_10_app/base.html" %}
+{% block title %}Home{% endblock title %}
+{% block homeactive %}active{% endblock homeactive %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row mt-4">
+        {% for prod in product %}
+        <div class="col-md-3 mb-4">
+        <div class="card" style="width: 19rem;">
+            <img src="{{prod.image}}"  class="card-img-top" alt="Card image cap" width="200px" height="200px">
+            <div class="card-body">
+              <h5 class="card-title">{{prod.item_name}}</h5>
+              <a href="{% url 'get_details' prod.id %}" class="btn btn-primary">Details</a>
+              <button type="button" class="btn btn-warning mr-3">Add to cart</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock body %}
+
+
+
+
+
+
+
+
+
+
