@@ -1,0 +1,24 @@
+<div class='container'>
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+
+                    <div class="toast-header">
+                        <img src="https://t4.ftcdn.net/jpg/03/46/38/39/360_F_346383913_JQecl2DhpHy2YakDz1t3h0Tk3Ov8hikq.jpg" class="rounded me-2" width="150px" height="150px">
+                    </div>
+
+                    <div class="toast-body">
+                        <h3>Are you sure you want to delete this item?</h3>
+                        <button type="submit" class="btn btn-danger mr-5" name="action" value="yes" style="width: 80px; height: 30px; font-weight: bold; font-size: 20px; background-color: #C0C0C0">Yes</button>
+                        <button type="submit" class="btn btn-danger mr-5" name="action" value="no" style="width: 80px; height: 30px; font-weight: bold; font-size: 20px; background-color: #C0C0C0">No</button>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+ </div>
