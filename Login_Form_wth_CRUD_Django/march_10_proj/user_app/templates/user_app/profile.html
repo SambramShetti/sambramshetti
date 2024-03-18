@@ -1,0 +1,24 @@
+{% extends "march_10_app/base.html" %}
+{% block title %}Profile{% endblock title %}
+{% block profileactive %}active{% endblock profileactive %}
+
+{% block body %}
+
+<h1>Username: {{ user.username }}</h1>
+
+{% comment %} <img width = "150px" height="150px" src="{{ user.profile.image.url }}"> {% endcomment %}
+
+{% if user.profile.image %}
+    <img width="150px" height="150px" src="{{ user.profile.image.url }}">
+{% else %}
+    <p>No profile image available</p>
+{% endif %} 
+
+
+<form action="{% url 'logout' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Logout</button>
+</form> 
+
+
+{% endblock body %}

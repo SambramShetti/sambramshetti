@@ -1,0 +1,73 @@
+{% extends "march_10_app/base.html" %}
+{% block title %}Details{% endblock title %}
+{% block body %}
+
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <img src="{{product.image}}" width="400px" height="300px">
+        </div>
+
+        <div class="col-md-6">
+            <table class="table table-striped">
+                <thead>
+                </thead>
+                <tbody>
+
+                  <tr>
+                    <td class="fw-bold">Item Name</td>
+                    <td>{{product.item_name}}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="fw-bold">Item Price</td>
+                    <td>{{product.price}}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="fw-bold">Discount Price</td>
+                    <td>{{product.discount_price}}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="fw-bold">Category</td>
+                    <td >{{product.category}}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="fw-bold">Description</td>
+                    <td>{{product.description}}</td>
+                  </tr>
+
+                </tbody>
+              </table>
+
+              <div class="row">
+                <div class="col">
+                    <!-- <button type="button" class="btn btn-danger mt-5">Delete Item</button> -->
+                    <a href="{% url 'delete_product' product.id %}" class="btn btn-danger mt-5">Delete Item</a>
+                </div>
+
+                <div class="col">
+                    <a href="{% url 'update_product' product.id %}" class="btn btn-warning mt-5">Update Item</a>
+                </div>
+
+              </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid fixed-bottom text-center mb-5">
+  <div class="row">
+      <div class="col-md-12">
+          <a class="btn btn-primary btn-lg mt-5" href="{% url 'home' %}">Back</a>
+      </div>
+  </div>
+</div>
+
+
+
+
+{% endblock body %}

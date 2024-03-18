@@ -1,0 +1,85 @@
+{% extends "march_10_app/base.html" %}
+{% block title %}Add{% endblock title %}
+{% block add_prodactive %}active{% endblock add_prodactive %}
+{% block body %}
+
+
+<div class="container">
+  <div class="row mt-4">
+      <div class="col-md-6 offset-md-3">
+
+          <div class="card bg-light shadow">
+
+              <div class="card-header bg-primary text-white">
+
+                  <div class="card-title text-center">
+                      <i class="bi bi-plus-circle"></i> Update Item
+                  </div>
+
+              </div>
+
+              <div class="card-body">
+                  <form method="POST" class="mt-3">
+                      {% csrf_token %}
+
+                      <div class="mb-3 row">
+                          <label for="itemName" class="col-sm-3 col-form-label text-center">Item Name:</label>
+                          <div class="col-sm-6 text-center">
+                              {{ form.item_name }}
+                          </div>
+                      </div>
+
+                      <div class="mb-3 row">
+                          <label for="price" class="col-sm-3 col-form-label text-center">Price:</label>
+                          <div class="col-sm-6 text-center">
+                              {{ form.price }}
+                          </div>
+                      </div>
+
+                      <div class="mb-3 row">
+                          <label for="discountPrice" class="col-sm-3 col-form-label text-center">Discount Price:</label>
+                          <div class="col-sm-6 text-center">
+                              {{ form.discount_price }}
+                          </div>
+                      </div>
+
+                      <div class="mb-3 row">
+                          <label for="category" class="col-sm-3 col-form-label text-center">Category:</label>
+                          <div class="col-sm-6 text-center">
+                              {{ form.category }}
+                          </div>
+                      </div>
+
+                      <div class="mb-3 row">
+                          <label for="description" class="col-sm-3 col-form-label text-center">Description:</label>
+                          <div class="col-sm-6 text-center">
+                              {{ form.description }}
+                          </div>
+                      </div>
+
+                      <div class="mb-3 row">
+                          <label for="image" class="col-sm-3 col-form-label text-center">Image:</label>
+                          <div class="col-sm-6 text-center">
+                              {{ form.image }}
+                          </div>
+                      </div>
+
+                      <div class="text-center">
+                          <button class="btn btn-info btn-lg" type="submit">Update</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="container-fluid fixed-bottom text-center mb-4">
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-primary btn-lg mt-5" href="{% url 'get_details' product.id %}">Back</a>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
