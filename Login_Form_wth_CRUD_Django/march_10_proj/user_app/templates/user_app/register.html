@@ -1,0 +1,41 @@
+{% extends "march_10_app/base.html" %}
+{% block title %}Register{% endblock title %}
+{% block registeractive %}active{% endblock registeractive %}
+{% block body %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <div class="card-title text-center mt-3" style="font-size: 24px;">
+                        Register
+                    </div>
+                </div>
+                <div class="card-body text-center" style="font-size: 20px;">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">
+                                {{field.name}}
+                                <br>
+                                {{field}}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-info mt-3">Signup</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid fixed-bottom text-center mb-4">
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-primary btn-lg mt-5" href="{% url 'home' %}">Back</a>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
